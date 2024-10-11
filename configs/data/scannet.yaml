@@ -1,0 +1,100 @@
+_target_: spa.data.base_cat_datamodule.BaseCatDataModule
+
+batch_size_train: 4 # per device
+batch_size_val: 1
+batch_size_test: 1
+num_workers: 16
+pin_memory: true
+
+data_scannet_processor_cfg:
+  enabled_proc_list:
+    train:
+      - imresize
+      - imcrop
+      - trans_to_local
+      - merge_trans_matrix
+      - filter_depth_outlier_old
+      - calc_ray_from_depth_v2
+      - calc_scene_bbox
+      - calc_voxel_size
+      - sample_ray
+      - collect
+    test:
+      - imresize
+      - imcrop
+      - trans_to_local
+      - merge_trans_matrix
+      - filter_depth_outlier_old
+      - calc_ray_from_depth_v2
+      - calc_scene_bbox
+      - calc_voxel_size
+      - sample_ray
+      - collect
+  proc_config:
+    imresize:
+      mv_consistency: true
+      extra_keys: ["depth"]
+      resize_scale:
+        train: [0.47, 0.5]
+        test: [0.47, 0.47]
+    imcrop:  # (480, 640)
+      mv_consistency: true
+      extra_keys: ["depth"]
+      crop_size: [224, 224]
+      crop_pos: 
+        train: [[0.0, 1.0], [0.0, 1.0]]
+        test: [[0.5, 0.5], [0.5, 0.5]]
+    trans_to_local:
+      mapping_keys: {}
+      to_local_key: ['world2cam', True]
+    merge_trans_matrix:
+      keys:
+        trans2d_matrix: [['cam2img', False], ]
+        trans3d_matrix: [['world2cam', True], ]
+    trans_normal:
+      key: ['world2cam', True]
+    filter_depth_outlier_old:
+      percentile: 0.05
+    calc_ray_from_depth_v2:
+      placeholder: null
+    calc_scene_bbox:
+      type: dynamic_depth
+    calc_voxel_size:
+      grid_size: [128, 128, 32]
+    sample_ray:
+      collider: 
+        type: AABBBoxColliderNp
+        near_plane: 0.1
+      ray_nsample: 512
+    collect:
+      keys:
+        train: ['img', 'dataset_name', 'semantic_img', 'depth', 'ori_shape', 'world2cam', 'cam2img', 'trans2d_matrix', 'scene_name', 'frame_list', 'ray_depth', 'ray_o', 'ray_d', 'ray_p', 'ray_near', 'ray_far', 'ray_idx', 'ray_scale', 'point_cloud_range', 'voxel_size', 'grid_size']
+        test: ['img', 'dataset_name', 'semantic_img', 'depth', 'ori_shape', 'world2cam', 'cam2img', 'trans2d_matrix', 'scene_name', 'frame_list', 'ray_depth', 'ray_o', 'ray_d', 'ray_p', 'ray_near', 'ray_far', 'ray_idx', 'ray_scale', 'point_cloud_range', 'voxel_size', 'grid_size']
+
+train:
+  - _target_: spa.data.components.scannet.ScanNetMultiViewSPAPretrain
+    split: train
+    scene_root: data/scannet/
+    frame_interval: 20
+    downsample_ratio: 0.5
+    num_cameras: 8
+    loop: 3
+    data_processor_cfg: ${data.data_scannet_processor_cfg}
+    batch_max_num_img: 24
+    mode: train
+    scene_box_threshold: 0.05
+    depth_area_threshold: 0.1
+    semantic_size: [1024, 1024]
+    
+val:
+  _target_: spa.data.components.scannet.ScanNetMultiViewSPAPretrain
+  split: val
+  scene_root: data/scannet/
+  frame_interval: 20
+  num_cameras: 8
+  loop: 1
+  downsample_ratio: 1
+  data_processor_cfg: ${data.data_scannet_processor_cfg}
+  batch_max_num_img: 24
+  mode: test
+  semantic_size: [1024, 1024]

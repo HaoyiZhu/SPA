@@ -1,0 +1,6 @@
+ema:
+  _target_: spa.utils.callbacks.EMA
+  decay: 0.999
+  validate_original_weights: false
+  every_n_steps: 1
+  cpu_offload: true

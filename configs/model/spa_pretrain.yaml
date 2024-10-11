@@ -1,0 +1,185 @@
+_target_: spa.models.spa_pretrain_module.SPAPretrainModule
+
+optimizer:
+  type: AdamW
+  lr: ${eval:'0.00001 * ${data.batch_size_train} * ${trainer.accumulate_grad_batches} * ${trainer.devices} * ${trainer.num_nodes} / 8'}
+  weight_decay: 0.04
+  betas: [0.9, 0.95]
+  layer_decay: 0.8
+  verbose: true
+param_dicts: null
+
+lr_scheduler:
+  scheduler:
+    type: OneCycleLR
+    max_lr: ${model.optimizer.lr}
+    pct_start: 0.05
+    anneal_strategy: cos
+    div_factor: 100.0
+    final_div_factor: 1000.0
+  # monitor: val/loss
+  interval: step
+  frequency: 1
+
+model:
+  _target_: spa.models.components.SPA
+  ckpt_name: spa-l
+  data_processor_cfg:
+    enabled_proc_list:
+      train:
+        - random_photometric_distort
+        - imnormalize
+      test:
+        - imnormalize
+    proc_config:
+      random_photometric_distort:
+        mv_consistency: true
+        brightness: [0.875, 1.125]
+        contrast: [0.5, 1.5]
+        saturation: [0.5, 1.5]
+        hue: [-0.05, 0.05]
+        p: 0.5
+      imnormalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+  fp16_enabled_layers: ["img_backbone"]
+  img_backbone:
+    _target_: spa.models.components.img_backbones.vit.SPAViT
+    img_size: 224
+    patch_size: 16
+    in_chans: 3
+    embed_dim: 1024
+    depth: 24
+    num_heads: 16
+    # depth / mae shared decoder
+    decoder_embed_dim: 512
+    mlp_ratio: 4.0
+    qkv_bias: true
+    pretrained_weight:
+    mask_ratio: 0.5
+    out_feature_channels: 64
+  view_transform:
+    _target_: spa.models.components.view_transforms.lss_voxelformer.LSSVoxelformer
+    in_channels: ${model.model.img_backbone.out_feature_channels}
+    grid_size: [128, 128, 32]
+    feature_map_stride: 1  # bev_stride
+    transformer_cfg:
+      num_layers: 1
+      transformerlayers:
+        attn_cfgs:
+          - type: VoxelformerCrossAttention
+            embed_dims: ${model.model.img_backbone.out_feature_channels}
+            num_heads: 8
+            num_points: 5
+            num_levels: 1
+          - type: VoxelformerSelfAttention
+            embed_dims: ${model.model.img_backbone.out_feature_channels}
+            num_convs: 1
+        ffn_cfgs: 
+          feedforward_channels: ${eval:'${model.model.img_backbone.out_feature_channels} * 4'}
+          num_fcs: 2
+          ffn_drop: 0.0
+        operation_order: ['cross_attn', 'norm', 'self_attn', 'norm', 'ffn', 'norm']
+  dense_head:
+    _target_: spa.models.components.dense_heads.render_head.RenderHead
+    in_channels: ${model.model.img_backbone.out_feature_channels}
+    feature_map_stride: ${model.model.view_transform.feature_map_stride}
+    val_ray_split: 8192
+    feature_type: 3d_to_3d
+    collider_cfg:
+      type: AABBBoxCollider
+      near_plane: 0.4
+    semantic_cfg:
+      use_semantic: true
+      type: radio
+      img_radio_cfg:
+        model: radio_v2
+    proj_cfg:
+      type: ExpConv3D
+      mid_channels: 64
+      sdf_channels: 33
+      rgb_channels: 27 # 3 * (sh_deg + 1) ** 2, sh_deg = 2
+      group_norm: true
+      semantic_channels: 1280
+      use_convnext_block: true
+      depth: 1
+    render_cfg:
+      type: NeuSModel
+      scene_scale: 1.6
+      field_cfg:
+        type: SDFFieldExp
+        beta_init: 0.3
+        use_gradient: True
+        volume_type: default
+        padding_mode: zeros
+        render_rgb: true
+        render_semantic: true
+        shared_volume: true
+        use_alpha: true
+      sampler_cfg:
+        type: NeuSSampler
+        initial_sampler: UniformSampler
+        num_samples: 72
+        num_samples_importance: 24
+        num_upsample_steps: 1
+        train_stratified: true
+        single_jitter: true
+      loss_cfg:
+        sensor_depth_truncation: 0.25
+        temperature: 0.01
+        weights:
+          eikonal_loss: 0.01
+          free_space_loss: 1.0
+          sdf_loss: 10.0
+          depth_loss: 1.0
+          rgb_loss: 10.0
+          semantic_loss: 1.0
+
+train_metrics:
+  _target_: spa.utils.metrics.Metrics
+  metrics:
+    - _target_: torchmetrics.MeanMetric
+    - _target_: torchmetrics.MeanMetric
+    - _target_: torchmetrics.MeanMetric
+    - _target_: torchmetrics.MeanMetric
+    - _target_: torchmetrics.MeanMetric
+  input_keys:
+    - loss
+    - rgb_loss
+    - psnr
+    - depth_loss
+    - semantic_loss
+  output_keys:
+    - train/loss
+    - train/rgb_loss
+    - train/psnr
+    - train/depth_loss
+    - train/semantic_loss
+val_metrics:
+  _target_: spa.utils.metrics.Metrics
+  metrics:
+    - _target_: torchmetrics.MeanMetric
+    - _target_: torchmetrics.MeanMetric
+    - _target_: torchmetrics.MeanMetric
+    - _target_: torchmetrics.MeanMetric
+    - _target_: torchmetrics.MeanMetric
+  input_keys:
+    - loss
+    - rgb_loss
+    - psnr
+    - depth_loss
+    - semantic_loss
+  output_keys:
+    - val/loss
+    - val/rgb_loss
+    - val/psnr
+    - val/depth_loss
+    - val/semantic_loss
+best_val_metrics:
+  _target_: spa.utils.metrics.Metrics
+  metrics:
+    - _target_: torchmetrics.MinMetric
+  input_keys:
+    - val/loss
+  output_keys:
+    - val/loss

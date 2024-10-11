@@ -1,0 +1,5 @@
+# https://lightning.ai/docs/pytorch/stable/api/lightning.pytorch.callbacks.StochasticWeightAveraging.html#stochasticweightaveraging
+
+stochastic_weight_averaging:
+  _target_: lightning.pytorch.callbacks.StochasticWeightAveraging
+  swa_lrs: 0.05

@@ -1,0 +1,70 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: scannet
+  - override /trainer: ddp
+  - override /model: spa_pretrain
+  - override /callbacks: default_ema
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+task_name: "spa_pretrain_vitb"
+
+default_ema:
+  ema:
+    decay: 0.999
+    validate_original_weights: false
+    every_n_steps: 1
+    cpu_offload: true
+
+trainer:
+  devices: 8
+  num_nodes: 1
+  max_epochs: 2000
+  check_val_every_n_epoch: 20
+  accelerator: gpu
+  strategy: auto
+  precision: 16-mixed
+  gradient_clip_val: 1.0
+  accumulate_grad_batches: 8
+  sync_batchnorm: false
+  limit_val_batches: 2
+  use_distributed_sampler: false
+
+lr_scale: 1.0
+
+data:
+  batch_size_train: 2
+  num_workers: 16
+
+model:
+  optimizer:
+    type: AdamW
+    lr: ${eval:'0.00001 * ${data.batch_size_train} * ${trainer.accumulate_grad_batches} * ${trainer.devices} * ${trainer.num_nodes} / 8'}
+    weight_decay: 0.04
+    betas: [0.9, 0.95]
+    layer_decay: 0.8
+    verbose: true
+  param_dicts: null
+  lr_scheduler:
+    scheduler:
+      type: OneCycleLR
+      max_lr: ${model.optimizer.lr}
+      pct_start: 0.05
+      anneal_strategy: cos
+      div_factor: 100.0
+      final_div_factor: 1000.0
+    # monitor: val/loss
+    interval: step
+    frequency: 1
+  model:
+    ckpt_name: spa-b
+    img_backbone:
+      embed_dim: 768
+      depth: 12
+      num_heads: 12
+    

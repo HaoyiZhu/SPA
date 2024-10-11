@@ -1,0 +1,3 @@
+device_stat_monitor:
+  _target_: lightning.pytorch.callbacks.DeviceStatsMonitor
+  cpu_stats: null

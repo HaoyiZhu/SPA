@@ -11,7 +11,7 @@
 [![isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 [![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](https://github.com/ashleve/lightning-hydra-template#license)
 
-[**Project Page**](https://haoyizhu.github.io/spa/) | [**Paper**](https://haoyizhu.github.io/spa/static/images/paper.pdf) | [**arXiv**](https://arxiv.org/abs/2410.08208) | [**HuggingFace Model**](https://huggingface.co/HaoyiZhu/SPA) | [**Real-World Codebase**](https://github.com/HaoyiZhu/RealRobot)
+[**Project Page**](https://haoyizhu.github.io/spa/) | [**Paper**](https://haoyizhu.github.io/spa/static/images/paper.pdf) | [**arXiv**](https://arxiv.org/abs/2410.08208) | [**HuggingFace Model**](https://huggingface.co/HaoyiZhu/SPA) | [**Real-World Codebase**](https://github.com/HaoyiZhu/RealRobot) | [**Twitter/X**](https://x.com/HaoyiZhu/status/1844675411760013471)
 
 [Haoyi Zhu](https://www.haoyizhu.site/), [Honghui Yang](https://hhyangcs.github.io/), [Yating Wang](https://scholar.google.com/citations?hl=zh-CN&user=5SuBWh0AAAAJ),  [Jiange Yang](https://yangjiangeyjg.github.io/), [Liming Wang](https://wanglimin.github.io/), [Tong He](http://tonghe90.github.io/)
 </div>

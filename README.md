@@ -26,17 +26,15 @@
 
 ## :clipboard: Contents
 
-- [ SPA: 3D SPatial-Awareness Enables Effective Embodied Representation](#-spa-3d-spatial-awareness-enables-effective-embodied-representation)
-  - [:clipboard: Contents](#clipboard-contents)
-  - [:telescope: Project Structure](#telescope-project-structure)
-  - [:hammer: Installation](#hammer-installation)
-  - [:star2: Usage](#star2-usage)
-  - [:rocket: Pre-Training](#rocket-pre-training)
-  - [:bulb: SPA Large-Scale Evaluation](#bulb-spa-large-scale-evaluation)
-  - [:tada: Gotchas](#tada-gotchas)
-  - [:books: License](#books-license)
-  - [:sparkles: Acknowledgement](#sparkles-acknowledgement)
-  - [:pencil: Citation](#pencil-citation)
+- [Project Structure](#telescope-project-structure)
+- [Installation](#installation)
+- [Usage](#star2-usage)
+- [Pre-Training](#rocket-pre-training)
+- [SPA Large-Scale Evaluation](#bulb-spa-large-scale-evaluation)
+- [Gotchas](#tada-gotchas)
+- [License](#books-license)
+- [Acknowledgement](#sparkles-acknowledgement)
+- [Citation](#pencil-citation)
 
 ## :telescope: Project Structure
 

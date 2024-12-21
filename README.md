@@ -26,15 +26,17 @@
 
 ## :clipboard: Contents
 
-- [Project Structure](#telescope-project-structure)
-- [Installation](#installation)
-- [Usage](#star2-usage)
-- [Pre-Training](#rocket-pre-training)
-- [SPA Large-Scale Evaluation](#bulb-spa-large-scale-evaluation)
-- [Gotchas](#tada-gotchas)
-- [License](#books-license)
-- [Acknowledgement](#sparkles-acknowledgement)
-- [Citation](#pencil-citation)
+- [ SPA: 3D SPatial-Awareness Enables Effective Embodied Representation](#-spa-3d-spatial-awareness-enables-effective-embodied-representation)
+  - [:clipboard: Contents](#clipboard-contents)
+  - [:telescope: Project Structure](#telescope-project-structure)
+  - [:hammer: Installation](#hammer-installation)
+  - [:star2: Usage](#star2-usage)
+  - [:rocket: Pre-Training](#rocket-pre-training)
+  - [:bulb: SPA Large-Scale Evaluation](#bulb-spa-large-scale-evaluation)
+  - [:tada: Gotchas](#tada-gotchas)
+  - [:books: License](#books-license)
+  - [:sparkles: Acknowledgement](#sparkles-acknowledgement)
+  - [:pencil: Citation](#pencil-citation)
 
 ## :telescope: Project Structure
 
@@ -189,9 +191,16 @@ We give an example on pre-training SPA on the [ScanNet](http://www.scan-net.org/
 ## :bulb: SPA Large-Scale Evaluation
 
 <details>
-  <summary><b>TBD</b></summary>
+<summary><b>VC-1 Evaluation</b></summary>
 
-</details>
+We evaluate on the VC-1's MetaWorld, Adroit, DMControl, and TriFinger benchmarks. Additionally, we have a [forked version of the repository ](https://github.com/xiaoxiao0406/eai-vc.git)that includes code and configuration for evaluating SPA.
+
+1) Clone the [forked VC-1 repo](https://github.com/xiaoxiao0406/eai-vc.git), and follow the instructions in the [CortexBench README](https://github.com/facebookresearch/eai-vc/blob/main/cortexbench/README.md) to set up the MuJoCo and TriFinger environments, as well as download the required datasets.
+   
+2) Create a configuration for spa `<spa_model>.yaml`(e.g., using SPA-Large as in [spa_vit_large.yaml](https://github.com/xiaoxiao0406/eai-vc/blob/main/vc_models/src/vc_models/conf/model/spa_vit_large.yaml)) in [<vc-1_path>/vc_models/src/vc_models/conf/model](https://github.com/xiaoxiao0406/eai-vc/tree/main/vc_models/src/vc_models/conf/model).
+
+3) To run the VC-1 evaluation for spa, specify the model config as a parameter (embedding=<spa_model>) for each of the benchmarks in [cortexbench](https://github.com/xiaoxiao0406/eai-vc/tree/main/cortexbench).
+</details> 
 
 ## :tada: Gotchas
 

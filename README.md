@@ -191,7 +191,7 @@ We give an example on pre-training SPA on the [ScanNet](http://www.scan-net.org/
 <details>
 <summary><b>VC-1 Evaluation</b></summary>
 
-We evaluate on the VC-1's MetaWorld, Adroit, DMControl, and TriFinger benchmarks. Additionally, we have a [forked version of the repository ](https://github.com/xiaoxiao0406/eai-vc.git)that includes code and configuration for evaluating SPA.
+We evaluate on the VC-1's MetaWorld, Adroit, DMControl, and TriFinger benchmarks. Additionally, we have a [forked version of the repository](https://github.com/xiaoxiao0406/eai-vc.git) that includes code and configuration for evaluating SPA.
 
 1) Clone the [forked VC-1 repo](https://github.com/xiaoxiao0406/eai-vc.git), and follow the instructions in the [CortexBench README](https://github.com/facebookresearch/eai-vc/blob/main/cortexbench/README.md) to set up the MuJoCo and TriFinger environments, as well as download the required datasets.
    

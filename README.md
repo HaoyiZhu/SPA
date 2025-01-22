@@ -22,6 +22,8 @@
 
 :partying_face: **NEWS**: 
 
+- *Jan. 2025:* SPA is accepted by ICLR 2025!
+
 - *Oct. 2024:* Codebase and pre-trained checkpoints are released! Paper is available on [arXiv](https://arxiv.org/abs/2410.08208).
 
 ## :clipboard: Contents

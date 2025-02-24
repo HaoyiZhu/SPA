@@ -14,12 +14,12 @@ scan_root = "data/scannet/scans"
 
 def save_meta(scene_name, split):
     meta_data = defaultdict(dict)
-    frame_list = U.io_utils.listdir(os.path.join(rgbd_root, scene_name, "color"))
+    frame_list = os.listdir(os.path.join(rgbd_root, scene_name, "color"))
     frame_list = list(frame_list)
     frame_list = [frame for frame in frame_list if frame.endswith(".jpg")]
     frame_list.sort(key=lambda x: int(x.split(".")[0]))
 
-    intrinsic = U.io_utils.load_numpy_text(
+    intrinsic = np.loadtxt(
         os.path.join(rgbd_root, scene_name, "intrinsic", "intrinsic_depth.txt")
     )
     if intrinsic is None or np.isnan(intrinsic).any() or np.isinf(intrinsic).any():
@@ -30,15 +30,11 @@ def save_meta(scene_name, split):
     meta_data["frames"] = defaultdict(dict)
     for frame_name in frame_list:
         pose = np.loadtxt(
-            StringIO(
-                U.io_utils.client.get_text(
-                    os.path.join(
-                        rgbd_root,
-                        scene_name,
-                        "pose",
-                        frame_name.replace(".jpg", ".txt"),
-                    )
-                )
+            os.path.join(
+                rgbd_root,
+                scene_name,
+                "pose",
+                frame_name.replace(".jpg", ".txt"),
             )
         )
         if pose is None or np.isnan(pose).any() or np.isinf(pose).any():

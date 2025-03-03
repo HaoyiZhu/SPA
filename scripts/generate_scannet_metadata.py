@@ -4,7 +4,6 @@ from io import StringIO
 from multiprocessing import Pool
 
 import numpy as np
-import src.utils as U
 import torch
 
 scene_root = "data/scannet"

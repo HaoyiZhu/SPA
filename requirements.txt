@@ -23,3 +23,4 @@ termcolor==2.4.0
 timm==0.9.10
 torchmetrics>=0.11.4
 yapf==0.40.2
+numpy<2.0.0

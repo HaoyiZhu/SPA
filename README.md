@@ -23,7 +23,6 @@
 :partying_face: **NEWS**: 
 
 - *Jan. 2025:* SPA is accepted by ICLR 2025!
-
 - *Oct. 2024:* Codebase and pre-trained checkpoints are released! Paper is available on [arXiv](https://arxiv.org/abs/2410.08208).
 
 ## :clipboard: Contents
@@ -89,7 +88,7 @@ Our codebase draws significant inspiration from the excellent [Lightning Hydra T
 <details>
 <summary><b>Basics</b></summary>
 
-```bash
+```console
 # clone project
 git clone https://github.com/HaoyiZhu/SPA.git
 cd SPA
@@ -109,7 +108,7 @@ pip3 install -r requirements.txt
 <details>
 <summary><b>SPA</b></summary>
 
-```bash
+```console
 # (optional) if you want to use SPA's volume decoder
 cd libs/spa-ops
 pip install -e .
@@ -177,12 +176,12 @@ We give an example on pre-training SPA on the [ScanNet](http://www.scan-net.org/
     - Download the [ScanNet](http://www.scan-net.org/) v2 dataset.
     - Pre-process and extract RGB-D images following [PonderV2](https://github.com/OpenGVLab/PonderV2/blob/main/docs/data_preparation.md#scannet-v2). The preprocessed data should be put under `data/scannet/`.
     - Pre-generate metadata for fast data loading. The following command will generate metadata under `data/scannet/metadata`.
-        ```bash
+        ```console
         python scripts/generate_scannet_metadata.py
         ```
 
 2) Run the following command for pre-training. Remember to modify hyper-parameters such as number of nodes and GPU devices according to your machines.
-    ```bash
+    ```console
     python spa/train.py experiment=spa_pretrain_vitl trainer.num_nodes=5 trainer.devices=8
     ```
 
@@ -195,11 +194,21 @@ We give an example on pre-training SPA on the [ScanNet](http://www.scan-net.org/
 
 We evaluate on the VC-1's MetaWorld, Adroit, DMControl, and TriFinger benchmarks. Additionally, we have a [forked version of the repository](https://github.com/xiaoxiao0406/eai-vc.git) that includes code and configuration for evaluating SPA.
 
-1) Clone the [forked VC-1 repo](https://github.com/xiaoxiao0406/eai-vc.git), and follow the instructions in the [CortexBench README](https://github.com/facebookresearch/eai-vc/blob/main/cortexbench/README.md) to set up the MuJoCo and TriFinger environments, as well as download the required datasets.
+1) Clone the [forked VC-1 repo](https://github.com/xiaoxiao0406/eai-vc.git), or you can use the [submodule](evaluation/eai-vc) by `git submodule update --init --recursive` and `cd evaluation/eai-vc`.
+Then please follow the instructions in the [CortexBench README](https://github.com/facebookresearch/eai-vc/blob/main/cortexbench/README.md) to set up the MuJoCo and TriFinger environments, as well as download the required datasets.
    
 2) Create a configuration for spa `<spa_model>.yaml`(e.g., using SPA-Large as in [spa_vit_large.yaml](https://github.com/xiaoxiao0406/eai-vc/blob/main/vc_models/src/vc_models/conf/model/spa_vit_large.yaml)) in [<vc-1_path>/vc_models/src/vc_models/conf/model](https://github.com/xiaoxiao0406/eai-vc/tree/main/vc_models/src/vc_models/conf/model).
 
 3) To run the VC-1 evaluation for spa, specify the model config as a parameter (embedding=<spa_model>) for each of the benchmarks in [cortexbench](https://github.com/xiaoxiao0406/eai-vc/tree/main/cortexbench).
+</details> 
+
+<details>
+<summary><b>Camera Pose Evaluation</b></summary>
+To reproduce the camera pose evaluation, we have open-sourced the code in [evaluation/probe3d](evaluation/probe3d). Please first run `git submodule update --init --recursive` and `cd evaluation/probe3d`. Then follow the instructions in [probe3d](https://github.com/HaoyiZhu/probe3d/blob/main/data_processing/README.md) to prepare the **NAVI** dataset. Finally, run the following command to evaluate SPA:
+
+```console
+python evaluate_navi_camera_pose.py
+```
 </details> 
 
 ## :tada: Gotchas
@@ -208,11 +217,11 @@ We evaluate on the VC-1's MetaWorld, Adroit, DMControl, and TriFinger benchmarks
 <summary><b> Override any config parameter from command line </b></summary>
 
 This codebase is based on [Hydra](https://github.com/facebookresearch/hydra), which allows for convenient configuration overriding:
-```bash
+```console
 python src/train.py trainer.max_epochs=20 seed=300
 ```
 > **Note**: You can also add new parameters with `+` sign.
-```bash
+```console
 python src/train.py +some_new_param=some_new_value
 ```
 
@@ -221,7 +230,7 @@ python src/train.py +some_new_param=some_new_value
 <details>
 <summary><b>Train on CPU, GPU, multi-GPU and TPU</b></summary>
 
-```bash
+```console
 # train on CPU
 python src/train.py trainer=cpu
 
@@ -249,7 +258,7 @@ python src/train.py trainer=mps
 <details>
 <summary><b>Train with mixed precision</b></summary>
 
-```bash
+```console
 # train with pytorch native automatic mixed precision (AMP)
 python src/train.py trainer=gpu +trainer.precision=16
 ```
@@ -280,7 +289,7 @@ python src/train.py +trainer.max_time="00:12:00:00"
 <details>
 <summary><b>Easily debug</b></summary>
 
-```bash
+```console
 # runs 1 epoch in default debugging mode
 # changes logging directory to `logs/debugs/...`
 # sets level of all command line loggers to 'DEBUG'
@@ -324,7 +333,7 @@ python src/train.py ckpt_path="/path/to/ckpt/name.ckpt"
 <details>
 <summary><b>Create a sweep over hyperparameters</b></summary>
 
-```bash
+```console
 # this will run 9 experiments one after the other,
 # each with different combination of seed and learning rate
 python src/train.py -m seed=100,200,300 model.optimizer.lr=0.0001,0.00005,0.00001
@@ -337,7 +346,7 @@ python src/train.py -m seed=100,200,300 model.optimizer.lr=0.0001,0.00005,0.0000
 <details>
 <summary><b>Execute all experiments from folder</b></summary>
 
-```bash
+```console
 python src/train.py -m 'exp_maniskill2_act_policy/maniskill2_task@maniskill2_task=glob(*)'
 ```
 
@@ -348,7 +357,7 @@ python src/train.py -m 'exp_maniskill2_act_policy/maniskill2_task@maniskill2_tas
 <details>
 <summary><b>Execute run for multiple different seeds</b></summary>
 
-```bash
+```console
 python src/train.py -m seed=100,200,300 trainer.deterministic=True
 ```
 

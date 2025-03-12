@@ -1,0 +1,6 @@
+[submodule "evaluations/eai-vc"]
+	path = evaluations/eai-vc
+	url = https://github.com/xiaoxiao0406/eai-vc
+[submodule "evaluations/probe3d"]
+	path = evaluations/probe3d
+	url = https://github.com/HaoyiZhu/probe3d.git

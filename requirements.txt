@@ -1,5 +1,5 @@
 addict==2.4.0
-black==24.4.2
+black>=24.4.2
 einops==0.8.0
 h5py==3.11.0
 hydra-colorlog==1.2.0

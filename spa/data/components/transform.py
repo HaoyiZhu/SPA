@@ -8,7 +8,7 @@ import torch
 
 
 def to_tensor(
-    data: Union[torch.Tensor, np.ndarray, Sequence, int, float]
+    data: Union[torch.Tensor, np.ndarray, Sequence, int, float],
 ) -> torch.Tensor:
     """Convert objects of various python types to :obj:`torch.Tensor`.
 

@@ -132,7 +132,8 @@ class SPA(nn.Module):
                 repo_id="HaoyiZhu/SPA", filename=f"{ckpt_name}.ckpt"
             )
             state_dict = torch.load(ckpt_file)["state_dict"]
-
+        # remove "model." prefix
+        state_dict = {k[6:]: v for k, v in state_dict.items()}
         self.load_state_dict(state_dict, strict=True)
 
     def init_data_processor(self):

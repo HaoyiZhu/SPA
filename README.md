@@ -204,6 +204,7 @@ Then please follow the instructions in the [CortexBench README](https://github.c
 
 <details>
 <summary><b>Camera Pose Evaluation</b></summary>
+
 To reproduce the camera pose evaluation, we have open-sourced the code in [evaluation/probe3d](evaluation/probe3d). Please first run `git submodule update --init --recursive` and `cd evaluation/probe3d`. Then follow the instructions in [probe3d](https://github.com/HaoyiZhu/probe3d/blob/main/data_processing/README.md) to prepare the **NAVI** dataset. Finally, run the following command to evaluate SPA:
 
 ```console

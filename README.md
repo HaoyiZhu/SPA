@@ -195,7 +195,7 @@ We give an example on pre-training SPA on the [ScanNet](http://www.scan-net.org/
 We evaluate on the VC-1's MetaWorld, Adroit, DMControl, and TriFinger benchmarks. Additionally, we have a [forked version of the repository](https://github.com/xiaoxiao0406/eai-vc.git) that includes code and configuration for evaluating SPA.
 
 1) Clone the [forked VC-1 repo](https://github.com/xiaoxiao0406/eai-vc.git), or you can use the [submodule](evaluation/eai-vc) by `git submodule update --init --recursive` and `cd evaluation/eai-vc`.
-Then please follow the instructions in the [CortexBench README](https://github.com/facebookresearch/eai-vc/blob/main/cortexbench/README.md) to set up the MuJoCo and TriFinger environments, as well as download the required datasets.
+Then, please follow the instructions in the [CortexBench README](https://github.com/facebookresearch/eai-vc/blob/main/cortexbench/README.md) to set up the MuJoCo and TriFinger environments, as well as download the required datasets.
    
 2) Create a configuration for spa `<spa_model>.yaml`(e.g., using SPA-Large as in [spa_vit_large.yaml](https://github.com/xiaoxiao0406/eai-vc/blob/main/vc_models/src/vc_models/conf/model/spa_vit_large.yaml)) in [<vc-1_path>/vc_models/src/vc_models/conf/model](https://github.com/xiaoxiao0406/eai-vc/tree/main/vc_models/src/vc_models/conf/model).
 
@@ -205,7 +205,7 @@ Then please follow the instructions in the [CortexBench README](https://github.c
 <details>
 <summary><b>Camera Pose Evaluation</b></summary>
 
-To reproduce the camera pose evaluation, we have open-sourced the code in [evaluation/probe3d](evaluation/probe3d). Please first run `git submodule update --init --recursive` and `cd evaluation/probe3d`. Then follow the instructions in [probe3d](https://github.com/HaoyiZhu/probe3d/blob/main/data_processing/README.md) to prepare the **NAVI** dataset. Finally, run the following command to evaluate SPA:
+To reproduce the camera pose evaluation, we have open-sourced the code in [evaluations/probe3d](evaluations/probe3d). Please first run `git submodule update --init --recursive` and `cd evaluations/probe3d`. Then follow the instructions in [probe3d](https://github.com/HaoyiZhu/probe3d/blob/main/data_processing/README.md) to prepare the **NAVI** dataset. Finally, run the following command to evaluate SPA:
 
 ```console
 python evaluate_navi_camera_pose.py

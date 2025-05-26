@@ -390,5 +390,13 @@ def load_pretrained(model: nn.Module, ckpt_name: str):
         ):
             state_dict[key.replace("model.img_backbone.", "")] = value
 
+    if state_dict["pos_embed"].shape != model.pos_embed.shape:
+        state_dict["pos_embed"] = resize_pos_embed(
+            state_dict["pos_embed"],
+            model.pos_embed,
+            getattr(model, "num_tokens", 1),
+            model.patch_embed.grid_size,
+        )
+
     model.load_state_dict(state_dict, strict=True)
     return model

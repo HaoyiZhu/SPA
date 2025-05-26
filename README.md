@@ -85,6 +85,12 @@ Our codebase draws significant inspiration from the excellent [Lightning Hydra T
 </details>
 
 ## :hammer: Installation
+
+> ⚠️ *Warning*: We have observed that using latest PyTorch versions (e.g., PyTorch 2.6) can lead to different feature maps compared to our original experiments.
+Currently, we do not know the exact reason for these discrepancies, nor can we confirm whether these differences will impact the final evaluation results.
+For **reproducibility purposes**, we strongly recommend using **PyTorch 2.2.1**, which is the version used in our original development and testing.
+If you choose to use a newer version, please be aware of this potential issue and proceed with caution.
+
 <details>
 <summary><b>Basics</b></summary>
 
@@ -99,7 +105,7 @@ conda activate spa
 
 # install PyTorch, please refer to https://pytorch.org/ for other CUDA versions
 # e.g. cuda 11.8:
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip3 install torch==2.2.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 # install basic packages
 pip3 install -r requirements.txt
 ```
@@ -209,6 +215,16 @@ To reproduce the camera pose evaluation, we have open-sourced the code in [evalu
 
 ```console
 python evaluate_navi_camera_pose.py
+```
+</details> 
+
+<details>
+<summary><b>Featuremap Visualization</b></summary>
+
+To reproduce the feature map visualization results, you can run with:
+
+```console
+python scripts/visualize_featuremap.py --image_folder assets/feature_map_vis
 ```
 </details> 
 

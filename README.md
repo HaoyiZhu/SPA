@@ -221,6 +221,11 @@ python evaluate_navi_camera_pose.py
 <details>
 <summary><b>Featuremap Visualization</b></summary>
 
+> ⚠️ *Warning*: We have observed that using latest PyTorch versions (e.g., PyTorch 2.6) can lead to different feature maps compared to our original experiments.
+Currently, we do not know the exact reason for these discrepancies, nor can we confirm whether these differences will impact the final evaluation results.
+For **reproducibility purposes**, we strongly recommend using **PyTorch 2.2.1**, which is the version used in our original development and testing.
+If you choose to use a newer version, please be aware of this potential issue and proceed with caution.
+
 To reproduce the feature map visualization results, you can run with:
 
 ```console

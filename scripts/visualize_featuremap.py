@@ -46,13 +46,17 @@ def main():
     ]
     images = np.stack(
         [
-            (resize(image, (448, 448), anti_aliasing=True) * 255).astype(np.uint8)
+            (
+                resize(image, (args.img_size, args.img_size), anti_aliasing=True) * 255
+            ).astype(np.uint8)
             for image in images
         ]
     )
     # images = np.stack(images) # / 255.
     images = torch.from_numpy(images).float().permute(0, 3, 1, 2).to(device) / 255.0
-    images = torch.nn.functional.interpolate(images, size=(448, 448), mode="bilinear")
+    images = torch.nn.functional.interpolate(
+        images, size=(args.img_size, args.img_size), mode="bilinear"
+    )
     # n c h w
     feature_map = model(images, feature_map=True, cat_cls=False)
     feature_map = torch.nn.functional.interpolate(

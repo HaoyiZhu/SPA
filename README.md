@@ -209,6 +209,68 @@ Then, please follow the instructions in the [CortexBench README](https://github.
 </details> 
 
 <details>
+<summary><b>LIBERO Evaluation</b></summary>
+
+Please first run `git submodule update --init --recursive`. Then install the LIBERO enviornment:
+
+```console
+cd evaluations/LIBERO
+pip3 install -r requirements.txt
+pip3 install -e .
+```
+
+Then you have to download LIBERO datasets:
+```console
+python benchmark_scripts/download_libero_datasets.py
+```
+
+Then you can choose:
+
+- `BENCHMARK` from `[LIBERO_SPATIAL, LIBERO_OBJECT, LIBERO_GOAL, LIBERO_90, LIBERO_10]`
+
+then run the following:
+
+```console
+export CUDA_VISIBLE_DEVICES=GPU_ID && \
+export MUJOCO_EGL_DEVICE_ID=GPU_ID && \
+python libero/lifelong/main.py seed=SEED \
+                               benchmark_name=BENCHMARK \
+                               policy=bc_transformer_policy \
+                               lifelong=multitask \
+                               policy/image_encoder=spa_encoder.yaml
+```
+Note that in SPA paper, we remove all the data augmentations since we aim to produce a simple and fair setting instead of training a SOTA policy. To do so, you could run the following:
+```console
+export CUDA_VISIBLE_DEVICES=GPU_ID && \
+export MUJOCO_EGL_DEVICE_ID=GPU_ID && \
+python libero/lifelong/main.py seed=SEED \
+                               benchmark_name=BENCHMARK \
+                               policy=bc_transformer_policy \
+                               lifelong=multitask \
+                               policy/image_encoder=spa_encoder.yaml \
+                               policy/data_augmentation@policy.color_aug=identity_aug.yaml \
+                               policy/data_augmentation@policy.translation_aug=identity_aug.yaml
+```
+> Actually, in SPA's experiments, for speed consideration, we use only 20 demos for each task. To do so, you may need to manually modify the datasets. Moreover, SPA only trains for 25 epochs.
+
+
+If you encounter this error, it is due to LIBERO's numpy version.
+```
+AttributeError: module 'numpy' has no attribute 'bool'.
+`np.bool` was a deprecated alias for the builtin `bool`. To avoid this error in existing code, use `bool` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.bool_` here.
+The aliases was originally deprecated in NumPy 1.20; for more details and guidance see the original release note at:
+    https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+```
+You can downgrade your numpy version:
+```console
+pip install "numpy<1.24"
+```
+
+For more details, please refer to LIBERO's official documentation.
+
+</details> 
+
+<details>
 <summary><b>Camera Pose Evaluation</b></summary>
 
 To reproduce the camera pose evaluation, we have open-sourced the code in [evaluations/probe3d](evaluations/probe3d). Please first run `git submodule update --init --recursive` and `cd evaluations/probe3d`. Then follow the instructions in [probe3d](https://github.com/HaoyiZhu/probe3d/blob/main/data_processing/README.md) to prepare the **NAVI** dataset. Finally, run the following command to evaluate SPA:

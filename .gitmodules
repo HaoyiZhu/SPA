@@ -4,3 +4,6 @@
 [submodule "evaluations/probe3d"]
 	path = evaluations/probe3d
 	url = https://github.com/HaoyiZhu/probe3d.git
+[submodule "evaluations/LIBERO"]
+	path = evaluations/LIBERO
+	url = https://github.com/HaoyiZhu/LIBERO.git
